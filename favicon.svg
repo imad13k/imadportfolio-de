@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-60 -50 698 710">
+  <style>
+    .m{fill:#1c2430}.f{stroke:#1c2430}
+    @media (prefers-color-scheme:dark){.m{fill:#e8ecef}.f{stroke:#e8ecef}}
+  </style>
+  <g class="f" fill="none" stroke-width="22" stroke-linecap="square">
+    <path d="M135 15H8V595H352"/>
+    <path d="M207 15H572V595H415"/>
+  </g>
+  <g class="m">
+    <rect x="171" y="-4" width="40" height="40"/>
+    <rect x="348" y="574" width="42" height="40"/>
+    <rect x="132" y="140" width="22" height="330"/>
+    <path d="M132 140H195L315 470H280Z"/>
+    <path d="M392 140H412L315 470H295Z"/>
+    <rect x="398" y="140" width="46" height="330"/>
+  </g>
+</svg>
