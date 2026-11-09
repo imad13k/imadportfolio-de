@@ -15,6 +15,7 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+section[id]{scroll-margin-top:84px}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--sans);overflow-x:hidden}
 a{color:inherit}
 svg{display:block;max-width:100%}
@@ -107,7 +108,72 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
 .rv{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
 .rv.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}}
+.svc article.rv:nth-child(2),.track li.rv:nth-child(2),.strip .cell.rv:nth-child(2){transition-delay:.08s}
+.svc article.rv:nth-child(3),.track li.rv:nth-child(3),.strip .cell.rv:nth-child(3){transition-delay:.16s}
+.svc article.rv:nth-child(4),.track li.rv:nth-child(4),.strip .cell.rv:nth-child(4){transition-delay:.24s}
+.svc article::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--orange);transform:scaleX(0);transform-origin:0 50%;transition:transform .5s var(--ease)}
+.svc article:hover::after{transform:scaleX(1)}
+.svc article:hover svg{animation:spin 1.2s var(--ease)}
+@keyframes spin{to{transform:rotate(180deg)}}
+
+/* hero: lines wipe in, the grid drifts, a rev counter warms up */
+.hero::before{animation:gridpan 30s linear infinite}
+@keyframes gridpan{to{background-position:80px 0,0 80px}}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.04em}
+.hero h1 .ln>span{display:inline-block;animation:wipe 1s var(--ease) both}
+.hero h1 .ln:nth-child(2)>span{animation-delay:.12s}
+@keyframes wipe{from{transform:translateY(105%)}}
+.hero .mono,.hero-row{animation:fadeup .9s var(--ease) .35s both}
+.hero .mono{animation-delay:0s}
+@keyframes fadeup{from{opacity:0;transform:translateY(20px)}}
+.hero-row.has-tacho{grid-template-columns:1fr auto auto;align-items:center}
+.tacho{width:clamp(170px,17vw,230px);pointer-events:none;animation:fadeup 1s var(--ease) .4s both}
+.tacho .needle{transform-origin:150px 150px;transform:rotate(-120deg);animation:rev 2.6s cubic-bezier(.5,0,.2,1) .8s forwards}
+@keyframes rev{0%{transform:rotate(-120deg)}45%{transform:rotate(78deg)}60%{transform:rotate(60deg)}100%{transform:rotate(-52deg)}}
+.tacho .idle{animation:idle .18s linear 3.4s infinite alternate}
+@keyframes idle{to{transform:rotate(2deg)}}
+.tacho .idle{transform-origin:150px 150px}
+.tacho .red{animation:redline 2.6s .8s both}
+@keyframes redline{0%,30%{opacity:.35}45%{opacity:1}65%,100%{opacity:.35}}
+@media(max-width:1000px){.tacho{display:none}}
+
+/* season checklist */
+.check{display:grid;grid-template-columns:1.2fr .8fr;gap:20px}
+.check ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+.check li{background:var(--bg)}
+.check label{display:flex;gap:16px;padding:22px 22px;cursor:pointer;transition:background .3s;height:100%}
+.check label:hover{background:var(--bg-2)}
+.check input{position:absolute;opacity:0;pointer-events:none}
+.box{flex:none;width:26px;height:26px;border:2px solid var(--muted);display:grid;place-items:center;transition:border-color .25s,background .25s;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px))}
+.box svg{width:16px;stroke:#111;stroke-width:3;fill:none;stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .35s var(--ease) .05s}
+.check input:checked+.box{background:var(--orange);border-color:var(--orange)}
+.check input:checked+.box svg{stroke-dashoffset:0}
+.check input:focus-visible+.box{outline:2px solid var(--orange);outline-offset:3px}
+.check h3{font-size:24px;margin-bottom:4px}
+.check p{margin:0;color:var(--muted);font-size:15px}
+.check input:checked~div h3{color:var(--orange)}
+.meter{background:var(--panel);border:1px solid var(--line);padding:clamp(24px,3vw,40px);display:flex;flex-direction:column;align-items:flex-start;gap:16px;position:sticky;top:90px;align-self:start}
+.meter svg{width:100%;max-width:280px;align-self:center}
+.meter .arc{fill:none;stroke:var(--orange);stroke-width:14;stroke-linecap:butt;stroke-dasharray:283;stroke-dashoffset:283;transition:stroke-dashoffset .8s var(--ease)}
+.meter .pct{font:800 64px var(--cond);fill:var(--ink)}
+.meter p{margin:0;color:var(--muted)}
+.meter b{color:var(--ink)}
+@media(max-width:900px){.check{grid-template-columns:1fr}.meter{position:static}}
+@media(max-width:560px){.check ul{grid-template-columns:1fr}}
+
+/* faq */
+.faq{border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:60px 1fr 30px;align-items:center;gap:12px;padding:24px 0;font:800 clamp(24px,2.6vw,34px)/1 var(--cond);text-transform:uppercase;transition:color .25s}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:hover{color:var(--orange)}
+.faq summary .mono{color:var(--muted);font-size:12px}
+.faq summary::after{content:"+";font:500 26px var(--mono);color:var(--orange);text-align:right;transition:transform .35s var(--ease)}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin:0 0 26px 72px;color:var(--muted);max-width:44em;animation:fadeup .5s var(--ease)}
+@media(max-width:560px){.faq summary{grid-template-columns:40px 1fr 24px}.faq details p{margin-left:52px}}
+
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}*{animation:none!important;transition:none!important}.tacho .needle{transform:rotate(-52deg)}}
 </style>
 </head>
 <body>
@@ -115,7 +181,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 <header class="hdr">
   <div class="wrap">
     <a class="logo" href="#top"><b>moto<span>42</span></b><small>Meisterbetrieb<br>Zweiradtechnik</small></a>
-    <nav class="nav"><a href="#leistungen">Leistungen</a><a href="#ablauf">Ablauf</a><a href="#kontakt">Kontakt</a></nav>
+    <nav class="nav"><a href="#leistungen">Leistungen</a><a href="#ablauf">Ablauf</a><a href="#saisoncheck">Saisoncheck</a><a href="#fragen">Fragen</a><a href="#kontakt">Kontakt</a></nav>
     <a class="btn btn-o" href="tel:+4951145799866">Termin anfragen</a>
   </div>
 </header>
@@ -124,10 +190,19 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   <section class="hero">
     <div class="wrap">
       <span class="mono">// Hannover-Vahrenwald · Vahrenwalder Str. 115</span>
-      <h1>Meister&shy;arbeit <span class="outline">für</span><br>Ihr <span class="o">Zweirad.</span></h1>
-      <div class="hero-row">
+      <h1><span class="ln"><span>Meister&shy;arbeit <span class="outline">für</span></span></span><span class="ln"><span>Ihr <span class="o">Zweirad.</span></span></span></h1>
+      <div class="hero-row has-tacho">
         <p>moto42 ist Ihr Meisterbetrieb für Zweiradtechnik in Hannover. Wartung, Reparatur und Fehlersuche, sauber erklärt und fair abgesprochen, bevor wir loslegen.</p>
         <div class="ctas"><a class="btn btn-o" href="tel:+4951145799866">0511 45 79 98 66</a><a class="btn btn-g" href="#leistungen">Leistungen</a></div>
+        <svg class="tacho" viewBox="0 0 300 222" aria-hidden="true">
+          <path d="M46.1 210A120 120 0 1 1 253.9 210" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"/>
+          <path class="red" d="M268.2 170.8A120 120 0 0 1 253.9 210" fill="none" stroke="#ff6a1a" stroke-width="10"/>
+          <g stroke="rgba(255,255,255,.55)" stroke-width="3" id="ticks"></g>
+          <g font-family="JetBrains Mono,monospace" font-size="13" fill="#9a9ea6" text-anchor="middle" id="nums"></g>
+          <text x="150" y="186" font-family="JetBrains Mono,monospace" font-size="11" fill="#9a9ea6" text-anchor="middle" letter-spacing="2">×1000 U/MIN</text>
+          <g class="idle"><g class="needle"><path d="M147 150 150 52 153 150z" fill="#ff6a1a"/></g></g>
+          <circle cx="150" cy="150" r="12" fill="#1d2024" stroke="#ff6a1a" stroke-width="3"/>
+        </svg>
       </div>
     </div>
     <div class="strip">
@@ -164,7 +239,41 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     </div>
   </section>
 
-  <section class="sec" id="kontakt">
+  <section class="sec" id="saisoncheck">
+    <div class="wrap">
+      <div class="head rv"><div><span class="mono">// Saisoncheck</span><h2>Startklar?</h2></div><p>Bevor es in die Saison geht: Haken Sie ab, was Sie selbst geprüft haben. Was offen bleibt, schauen wir uns gern an.</p></div>
+      <div class="check">
+        <ul id="checks">
+          <li class="rv"><label><input type="checkbox"><span class="box"><svg viewBox="0 0 16 16"><path d="M2 8.5 6 12l8-8"/></svg></span><div><h3>Reifen</h3><p>Luftdruck geprüft, Profil ausreichend, keine Risse an der Flanke.</p></div></label></li>
+          <li class="rv"><label><input type="checkbox"><span class="box"><svg viewBox="0 0 16 16"><path d="M2 8.5 6 12l8-8"/></svg></span><div><h3>Bremsen</h3><p>Beläge nicht abgefahren, Bremsflüssigkeit nicht zu alt.</p></div></label></li>
+          <li class="rv"><label><input type="checkbox"><span class="box"><svg viewBox="0 0 16 16"><path d="M2 8.5 6 12l8-8"/></svg></span><div><h3>Kette</h3><p>Sauber, geschmiert und richtig gespannt.</p></div></label></li>
+          <li class="rv"><label><input type="checkbox"><span class="box"><svg viewBox="0 0 16 16"><path d="M2 8.5 6 12l8-8"/></svg></span><div><h3>Licht</h3><p>Scheinwerfer, Rücklicht, Bremslicht und Blinker funktionieren.</p></div></label></li>
+          <li class="rv"><label><input type="checkbox"><span class="box"><svg viewBox="0 0 16 16"><path d="M2 8.5 6 12l8-8"/></svg></span><div><h3>Batterie</h3><p>Geladen, Pole sauber, Motor springt zuverlässig an.</p></div></label></li>
+          <li class="rv"><label><input type="checkbox"><span class="box"><svg viewBox="0 0 16 16"><path d="M2 8.5 6 12l8-8"/></svg></span><div><h3>Öl &amp; Flüssigkeiten</h3><p>Ölstand und Kühlmittel im grünen Bereich, nichts tropft.</p></div></label></li>
+        </ul>
+        <div class="meter rv">
+          <span class="mono">// Fortschritt</span>
+          <svg viewBox="0 0 220 130"><path d="M20 120a90 90 0 0 1 180 0" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="14"/><path class="arc" id="arc" d="M20 120a90 90 0 0 1 180 0"/><text class="pct" x="110" y="116" text-anchor="middle" id="pct">0/6</text></svg>
+          <p id="verdict"><b>Noch nichts abgehakt.</b> Fangen Sie mit den Reifen an.</p>
+          <a class="btn btn-o" href="tel:+4951145799866">Saisoncheck anfragen</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="fragen" style="padding-top:0">
+    <div class="wrap">
+      <div class="head rv"><div><span class="mono">// Fragen</span><h2>Kurz gefragt.</h2></div></div>
+      <div class="faq rv">
+        <details open><summary><span class="mono">01</span>Brauche ich einen Termin?</summary><p>Ja. Rufen Sie kurz an, schildern Sie, worum es geht, und wir vereinbaren einen Termin für die Werkstatt.</p></details>
+        <details><summary><span class="mono">02</span>Weiß ich vorher, was es kostet?</summary><p>Ja. Sie bekommen Befund und Kosten, bevor wir loslegen, und entscheiden selbst, was gemacht wird.</p></details>
+        <details><summary><span class="mono">03</span>Was bringe ich zum Termin mit?</summary><p>Das Fahrzeug, die Schlüssel und die Fahrzeugpapiere. Bei einer Wartung gern auch das Serviceheft.</p></details>
+        <details><summary><span class="mono">04</span>Wann ist der beste Zeitpunkt für den Saisoncheck?</summary><p>Am besten vor dem ersten Ausflug im Frühjahr, bevor alle gleichzeitig starten. Melden Sie sich einfach rechtzeitig.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="kontakt" style="padding-top:0">
     <div class="wrap">
       <div class="contact">
         <div class="panel rv">
@@ -198,6 +307,19 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 <script>
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}}),{threshold:.12});
 document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+
+// Drehzahlmesser: Skala von 0 bis 12 über 240 Grad
+const tk=document.getElementById("ticks"),nm=document.getElementById("nums");
+for(let i=0;i<=12;i++){const a=(-120+i*20)*Math.PI/180,s=Math.sin(a),c=-Math.cos(a);
+  tk.insertAdjacentHTML("beforeend",`<line x1="${150+s*104}" y1="${150+c*104}" x2="${150+s*(i%2?112:96)}" y2="${150+c*(i%2?112:96)}"${i>=10?' stroke="#ff6a1a"':""}/>`);
+  if(i%2===0)nm.insertAdjacentHTML("beforeend",`<text x="${150+s*80}" y="${150+c*80+5}">${i}</text>`)}
+
+// Saisoncheck
+const boxes=[...document.querySelectorAll("#checks input")],arc=document.getElementById("arc"),pct=document.getElementById("pct"),vd=document.getElementById("verdict");
+const V=[["Noch nichts abgehakt.","Fangen Sie mit den Reifen an."],["Guter Anfang.","Ein paar Punkte fehlen noch."],["Halb geschafft.","Der Rest geht schnell."],["Fast startklar.","Nur noch wenige Punkte."],["Startklar!","Gute Fahrt. Bei Fragen sind wir für Sie da."]];
+function check(){const n=boxes.filter(b=>b.checked).length,k=n/boxes.length;arc.style.strokeDashoffset=283*(1-k);pct.textContent=`${n}/${boxes.length}`;
+  const v=V[n===boxes.length?4:n===0?0:k<.5?1:k<.84?2:3];vd.innerHTML=`<b>${v[0]}</b> ${v[1]}`}
+boxes.forEach(b=>b.addEventListener("change",check));check();
 </script>
 </body>
 </html>
